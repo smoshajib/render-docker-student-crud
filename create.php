@@ -1,21 +1,18 @@
 <?php
+ob_start(); // start output buffering
 include __DIR__ . '/db.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Trim inputs for safety
     $name  = trim($_POST['name']);
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone'] ?? '');
 
-    // Prepared statement
     $stmt = $pdo->prepare("INSERT INTO students (name, email, phone) VALUES (?, ?, ?)");
     $stmt->execute([$name, $email, $phone]);
 
-    // Redirect after insert
     header("Location: index.php");
     exit();
 }
-?>
 
 <!DOCTYPE html>
 <html lang="en">
