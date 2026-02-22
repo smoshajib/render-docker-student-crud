@@ -1,0 +1,37 @@
+<?php
+include __DIR__ . '/db.php';
+
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Trim inputs for safety
+    $name  = trim($_POST['name']);
+    $email = trim($_POST['email']);
+    $phone = trim($_POST['phone'] ?? '');
+
+    // Prepared statement
+    $stmt = $pdo->prepare("INSERT INTO students (name, email, phone) VALUES (?, ?, ?)");
+    $stmt->execute([$name, $email, $phone]);
+
+    // Redirect after insert
+    header("Location: index.php");
+    exit();
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Student</title>
+</head>
+<body>
+    <h2>Add Student</h2>
+    <form method="POST">
+        Name: <input type="text" name="name" required><br><br>
+        Email: <input type="email" name="email" required><br><br>
+        Phone: <input type="text" name="phone"><br><br>
+        <button type="submit">Save</button>
+    </form>
+    <br>
+    <a href="index.php">Back to Student List</a>
+</body>
+</html>

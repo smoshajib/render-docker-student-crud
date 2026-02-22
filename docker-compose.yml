@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: apache-php
+    ports:
+      - "8080:80"         # Access app at http://localhost:8080
+    depends_on:
+      - db
+    volumes:
+      - ./:/var/www/html  # Mount project root
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: studentdb      # Must match db.php
+      MYSQL_USER: student_user
+      MYSQL_PASSWORD: student_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
