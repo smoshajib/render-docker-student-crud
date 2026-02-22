@@ -1,9 +1,17 @@
 <?php
-$host = getenv("DB_HOST");
-$db   = getenv("DB_NAME");
-$user = getenv("DB_USER");
-$pass = getenv("DB_PASS");
-$port = getenv("DB_PORT");
+$databaseUrl = getenv("DATABASE_URL");
+
+if (!$databaseUrl) {
+    die("DATABASE_URL environment variable not set");
+}
+
+// Parse the URL
+$url = parse_url($databaseUrl);
+$host = $url["host"];
+$port = $url["port"] ?? 5432; // default port
+$user = $url["user"];
+$pass = $url["pass"];
+$db   = ltrim($url["path"], '/');
 
 try {
     $dsn = "pgsql:host=$host;port=$port;dbname=$db;";
